@@ -1,0 +1,48 @@
+#Reproducible Research Assessment 1
+===================================
+
+##Read Data
+```{r}
+data=read.csv("activity.csv")
+datanew=data
+a=factor(data$date)
+
+```
+##Total steps per day
+```{r}
+sum=tapply(data$steps,a,sum)
+hist(sum)
+mean(sum,na.rm=TRUE)
+median(sum,na.rm=TRUE)
+```
+##Average Daily Pattern
+```{r}
+average=array(sum/12/24)
+plot(unique(a),average,type="l")
+a[which.max(average)]
+```
+##NA issue
+```{r}
+sum(is.na(data$steps)==TRUE)
+for (i in 1:nrow(data)){
+    if (is.na(data[i,1])){
+    datanew[i,1]=mean(sum,na.rm=TRUE)
+    }
+}
+sumnew=tapply(data$steps,a,sum)
+hist(sumnew)
+mean(sum,na.rm=TRUE)
+median(sum,na.rm=TRUE)
+```
+##weekday and weekend
+```{r}
+for (i in 1:nrow(data)){
+    if (weekdays(as.Date(datanew[i,2])) %in% c("Saturday","Sunday")){
+    datanew[i,4]="weekend"
+    }
+    else{
+        datanew[i,4]="weekday"
+    }
+}
+
+```
